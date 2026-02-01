@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class ScenesRequests
+public class ScenesRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public ScenesRequests(ObsBridge bridge) => _bridge = bridge;
+    public ScenesRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets an array of all scenes in OBS. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     public Task<JObject> GetSceneListAsync()
     => _bridge.SendRequestAsync("GetSceneList", new JObject());

@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class OutputsRequests
+public class OutputsRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public OutputsRequests(ObsBridge bridge) => _bridge = bridge;
+    public OutputsRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets the status of the virtualcam output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     public Task<bool> GetVirtualCamStatusAsync()
     => _bridge.SendRequestAsync("GetVirtualCamStatus", new JObject());

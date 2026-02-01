@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class SceneItemsRequests
+public class SceneItemsRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public SceneItemsRequests(ObsBridge bridge) => _bridge = bridge;
+    public SceneItemsRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets a list of all scene items in a scene. Scenes only - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene to get the items of</param>
     /// <param name="sceneUuid">UUID of the scene to get the items of</param>

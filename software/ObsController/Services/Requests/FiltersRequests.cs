@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class FiltersRequests
+public class FiltersRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public FiltersRequests(ObsBridge bridge) => _bridge = bridge;
+    public FiltersRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets an array of all available source filter kinds. Similar to `GetInputKindList` - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.4.0</summary>
     public Task<JObject> GetSourceFilterKindListAsync()
     => _bridge.SendRequestAsync("GetSourceFilterKindList", new JObject());

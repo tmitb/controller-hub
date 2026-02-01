@@ -131,10 +131,10 @@ for cat_name, cat_body in categories:
     lines.append("using Newtonsoft.Json.Linq;")
     lines.append("")
     lines.append("namespace ObsController.Services.Requests;")
-    lines.append(f"public class {class_name}")
+    # Inherit from BaseRequests and delegate bridge initialization to base class
+    lines.append(f"public class {class_name} : BaseRequests")
     lines.append("{")
-    lines.append("    private readonly ObsBridge _bridge;")
-    lines.append(f"    public {class_name}(ObsBridge bridge) => _bridge = bridge;")
+    lines.append(f"    public {class_name}(ObsBridge bridge) : base(bridge) {{}}")
 
     # Iterate over each request definition within the category
     for req_match in re.finditer(r"###\s+(\w+)", cat_body):

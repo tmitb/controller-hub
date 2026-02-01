@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class RecordRequests
+public class RecordRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public RecordRequests(ObsBridge bridge) => _bridge = bridge;
+    public RecordRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets the status of the record output. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     public Task<JObject> GetRecordStatusAsync()
     => _bridge.SendRequestAsync("GetRecordStatus", new JObject());

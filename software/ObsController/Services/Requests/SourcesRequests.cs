@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class SourcesRequests
+public class SourcesRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public SourcesRequests(ObsBridge bridge) => _bridge = bridge;
+    public SourcesRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets the active and show state of a source. **Compatible with inputs and scenes.** - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sourceName">Name of the source to get the active state of</param>
     /// <param name="sourceUuid">UUID of the source to get the active state of</param>

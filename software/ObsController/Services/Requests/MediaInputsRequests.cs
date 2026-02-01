@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class MediaInputsRequests
+public class MediaInputsRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public MediaInputsRequests(ObsBridge bridge) => _bridge = bridge;
+    public MediaInputsRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets the status of a media input. Media States: - `OBS_MEDIA_STATE_NONE` - `OBS_MEDIA_STATE_PLAYING` - `OBS_MEDIA_STATE_OPENING` - `OBS_MEDIA_STATE_BUFFERING` - `OBS_MEDIA_STATE_PAUSED` - `OBS_MEDIA_STATE_STOPPED` - `OBS_MEDIA_STATE_ENDED` - `OBS_MEDIA_STATE_ERROR` - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the media input</param>
     /// <param name="inputUuid">UUID of the media input</param>

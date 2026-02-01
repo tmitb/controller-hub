@@ -202,14 +202,6 @@ public class ObsBridge : IAsyncDisposable
         }
     }
 
-    // ---------------------------------------------------------------------
-    // High‑level helpers matching actions defined in Mapping.ButtonMap
-    // ---------------------------------------------------------------------
-    public Task StartStreamingAsync() => SendRequestAsync("StartStream");
-    public Task StopStreamingAsync() => SendRequestAsync("StopStream");
-    public Task ToggleRecordingAsync() => SendRequestAsync("ToggleRecord");
-    public Task SwitchSceneAsync(string sceneName) => SendRequestAsync("SetCurrentProgramScene", new JObject { ["sceneName"] = sceneName });
-
     // Dispose pattern – close the websocket gracefully.
     public async ValueTask DisposeAsync()
     {

@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class UiRequests
+public class UiRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public UiRequests(ObsBridge bridge) => _bridge = bridge;
+    public UiRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets whether studio is enabled. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     public Task<bool> GetStudioModeEnabledAsync()
     => _bridge.SendRequestAsync("GetStudioModeEnabled", new JObject());

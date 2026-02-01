@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class InputsRequests
+public class InputsRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public InputsRequests(ObsBridge bridge) => _bridge = bridge;
+    public InputsRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets an array of all inputs in OBS. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputKind">Restrict the array to only inputs of the specified kind</param>
     public Task<JObject> GetInputListAsync(string inputKind = null)

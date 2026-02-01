@@ -82,36 +82,16 @@ public class Program
             if (!mapping.ButtonMap.ContainsKey(key.ToString()))
                 continue;
 
-            var action = mapping.ButtonMap[key.ToString()];
-            if (string.IsNullOrWhiteSpace(action.Action))
-                continue;
+            var mappingEntry = mapping.ButtonMap[key.ToString()];
+            if (mappingEntry == null) continue;
 
-            
             try
             {
-                switch (action.Action)
-                {
-                    case "StartStreaming":
-                        await bridge.StartStreamingAsync();
-                        break;
-                    case "StopStreaming":
-                        await bridge.StopStreamingAsync();
-                        break;
-                    case "ToggleRecording":
-                        await bridge.ToggleRecordingAsync();
-                        break;
-                    case "SwitchScene":
-                        if (!string.IsNullOrEmpty(action.Parameter))
-                            await bridge.SwitchSceneAsync(action.Parameter);
-                        break;
-                    default:
-                        Console.WriteLine($"[WARN] Unknown action '{action.Action}' for button {key}.");
-                        break;
-                }
+                await ActionExecutor.ExecuteAsync(mappingEntry, bridge);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Failed to execute action '{action.Action}' for button {key}: {ex.Message}");
+                Console.WriteLine($"[ERROR] Failed to execute action for button {key}: {ex.Message}");
             }
         }
         // No switch/axis handling because This app does not care.

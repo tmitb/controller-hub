@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class TransitionsRequests
+public class TransitionsRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public TransitionsRequests(ObsBridge bridge) => _bridge = bridge;
+    public TransitionsRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets an array of all available transition kinds. Similar to `GetInputKindList` - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     public Task<JObject> GetTransitionKindListAsync()
     => _bridge.SendRequestAsync("GetTransitionKindList", new JObject());

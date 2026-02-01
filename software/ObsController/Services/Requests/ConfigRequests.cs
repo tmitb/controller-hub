@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class ConfigRequests
+public class ConfigRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public ConfigRequests(ObsBridge bridge) => _bridge = bridge;
+    public ConfigRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets the value of a "slot" from the selected persistent data realm. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="realm">The data realm to select. `OBS_WEBSOCKET_DATA_REALM_GLOBAL` or `OBS_WEBSOCKET_DATA_REALM_PROFILE`</param>
     /// <param name="slotName">The name of the slot to retrieve data from</param>

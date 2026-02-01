@@ -4,11 +4,11 @@
   "port": 4455,
   "password": "",
   "buttonMap": {
-    "0": { "action": "SwitchScene", "parameter": "Intro" },
-    "1": { "action": "SwitchScene", "parameter": "Main" },
-    "2": { "action": "SwitchScene", "parameter": "Outro" },
-    "3": { "action": "SwitchScene", "parameter": "Intermission" },
-    "5": { "action": "StartStreaming"},
-    "9": { "action": "StopStreaming"}
+    "0": { "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Intro" } },
+    "1": { "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Main" } },
+    "2": { "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Outro" } },
+    "3": { "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Intermission" } },
+    "5": { "category": "Stream", "action": "StartStream" },
+    "9": { "category": "Stream", "action": "StopStream" }
   }
 }

@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace ObsController.Services.Requests;
-public class GeneralRequests
+public class GeneralRequests : BaseRequests
 {
-    private readonly ObsBridge _bridge;
-    public GeneralRequests(ObsBridge bridge) => _bridge = bridge;
+    public GeneralRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets data about the current plugin and RPC version. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     public Task<JObject> GetVersionAsync()
     => _bridge.SendRequestAsync("GetVersion", new JObject());

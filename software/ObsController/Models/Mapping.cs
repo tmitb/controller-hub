@@ -25,20 +25,21 @@ public class Mapping
     public string Password { get; set; }
 
     // Index‑based dictionaries for buttons, switches and axes (keys are stringified integers)
-    public Dictionary<string, ButtonAction> ButtonMap   { get; set; }
-    public Dictionary<string, ButtonAction> SwitchMap   { get; set; }
-    public Dictionary<string, ButtonAction> AxisMap     { get; set; }
+    public Dictionary<string, ActionMapping> ButtonMap   { get; set; }
+    public Dictionary<string, ActionMapping> SwitchMap   { get; set; }
+    public Dictionary<string, ActionMapping> AxisMap     { get; set; }
 }
 
-public class ButtonAction
+/// <summary>
+/// Represents a configurable action.
+/// "Category" selects the request class (e.g., "Scenes").
+/// "Action" is the method name to invoke (without the Async suffix).
+/// "Parameters" provides named arguments for that method.
+/// </summary>
+public class ActionMapping
 {
-    /// <summary>
-    /// Name of the OBS action to invoke.
-    /// Supported values: StartStreaming, StopStreaming, ToggleRecording, SwitchScene, etc.
-    /// </summary>
+    public string Category { get; set; }
     public string Action { get; set; }
-
-    // Optional parameter for actions that need extra data (e.g., scene name)
-    public string Parameter { get; set; }
+    // Simple key/value pairs; values are kept as strings and converted when invoking.
+    public Dictionary<string, string> Parameters { get; set; }
 }
-

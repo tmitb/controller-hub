@@ -30,14 +30,15 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneUuid">UUID of the scene or group to search in</param>
     /// <param name="sourceName">Name of the source to find</param>
     /// <param name="searchOffset">Number of matches to skip during search. >= 0 means first forward. -1 means last (top) item</param>
-    public Task<double> GetSceneItemIdAsync(string sourceName, string sceneName = null, string sceneUuid = null, double? searchOffset = null)
+    public async Task<double> GetSceneItemIdAsync(string sourceName, string sceneName = null, string sceneUuid = null, double? searchOffset = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
         if (sceneUuid != null) data["sceneUuid"] = JToken.FromObject(sceneUuid);
         data["sourceName"] = JToken.FromObject(sourceName);
         if (searchOffset != null) data["searchOffset"] = JToken.FromObject(searchOffset);
-        return _bridge.SendRequestAsync("GetSceneItemId", data);
+        var resp = await _bridge.SendRequestAsync("GetSceneItemId", data);
+        return resp["sceneItemId"].ToObject<double>();
     }
     /// <summary>Gets the source associated with a scene item. - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.4.0</summary>
     /// <param name="sceneName">Name of the scene the item is in</param>
@@ -57,7 +58,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sourceName">Name of the source to add to the scene</param>
     /// <param name="sourceUuid">UUID of the source to add to the scene</param>
     /// <param name="sceneItemEnabled">Enable state to apply to the scene item on creation</param>
-    public Task<double> CreateSceneItemAsync(string sceneName = null, string sceneUuid = null, string sourceName = null, string sourceUuid = null, bool? sceneItemEnabled = null)
+    public async Task<double> CreateSceneItemAsync(string sceneName = null, string sceneUuid = null, string sourceName = null, string sourceUuid = null, bool? sceneItemEnabled = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -65,7 +66,8 @@ public class SceneItemsRequests : BaseRequests
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
         if (sourceUuid != null) data["sourceUuid"] = JToken.FromObject(sourceUuid);
         if (sceneItemEnabled != null) data["sceneItemEnabled"] = JToken.FromObject(sceneItemEnabled);
-        return _bridge.SendRequestAsync("CreateSceneItem", data);
+        var resp = await _bridge.SendRequestAsync("CreateSceneItem", data);
+        return resp["sceneItemId"].ToObject<double>();
     }
     /// <summary>Removes a scene item from a scene. Scenes only - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene the item is in</param>
@@ -85,7 +87,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="destinationSceneName">Name of the scene to create the duplicated item in</param>
     /// <param name="destinationSceneUuid">UUID of the scene to create the duplicated item in</param>
-    public Task<double> DuplicateSceneItemAsync(double sceneItemId, string sceneName = null, string sceneUuid = null, string destinationSceneName = null, string destinationSceneUuid = null)
+    public async Task<double> DuplicateSceneItemAsync(double sceneItemId, string sceneName = null, string sceneUuid = null, string destinationSceneName = null, string destinationSceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -93,7 +95,8 @@ public class SceneItemsRequests : BaseRequests
         data["sceneItemId"] = JToken.FromObject(sceneItemId);
         if (destinationSceneName != null) data["destinationSceneName"] = JToken.FromObject(destinationSceneName);
         if (destinationSceneUuid != null) data["destinationSceneUuid"] = JToken.FromObject(destinationSceneUuid);
-        return _bridge.SendRequestAsync("DuplicateSceneItem", data);
+        var resp = await _bridge.SendRequestAsync("DuplicateSceneItem", data);
+        return resp["sceneItemId"].ToObject<double>();
     }
     /// <summary>Gets the transform and crop info of a scene item. Scenes and Groups - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene the item is in</param>
@@ -125,13 +128,14 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<bool> GetSceneItemEnabledAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
+    public async Task<bool> GetSceneItemEnabledAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
         if (sceneUuid != null) data["sceneUuid"] = JToken.FromObject(sceneUuid);
         data["sceneItemId"] = JToken.FromObject(sceneItemId);
-        return _bridge.SendRequestAsync("GetSceneItemEnabled", data);
+        var resp = await _bridge.SendRequestAsync("GetSceneItemEnabled", data);
+        return resp["sceneItemEnabled"].ToObject<bool>();
     }
     /// <summary>Sets the enable state of a scene item. Scenes and Groups - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene the item is in</param>
@@ -151,13 +155,14 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<bool> GetSceneItemLockedAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
+    public async Task<bool> GetSceneItemLockedAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
         if (sceneUuid != null) data["sceneUuid"] = JToken.FromObject(sceneUuid);
         data["sceneItemId"] = JToken.FromObject(sceneItemId);
-        return _bridge.SendRequestAsync("GetSceneItemLocked", data);
+        var resp = await _bridge.SendRequestAsync("GetSceneItemLocked", data);
+        return resp["sceneItemLocked"].ToObject<bool>();
     }
     /// <summary>Sets the lock state of a scene item. Scenes and Group - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene the item is in</param>
@@ -177,13 +182,14 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<double> GetSceneItemIndexAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
+    public async Task<double> GetSceneItemIndexAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
         if (sceneUuid != null) data["sceneUuid"] = JToken.FromObject(sceneUuid);
         data["sceneItemId"] = JToken.FromObject(sceneItemId);
-        return _bridge.SendRequestAsync("GetSceneItemIndex", data);
+        var resp = await _bridge.SendRequestAsync("GetSceneItemIndex", data);
+        return resp["sceneItemIndex"].ToObject<double>();
     }
     /// <summary>Sets the index position of a scene item in a scene. Scenes and Groups - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene the item is in</param>
@@ -203,13 +209,14 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<string> GetSceneItemBlendModeAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
+    public async Task<string> GetSceneItemBlendModeAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
         if (sceneUuid != null) data["sceneUuid"] = JToken.FromObject(sceneUuid);
         data["sceneItemId"] = JToken.FromObject(sceneItemId);
-        return _bridge.SendRequestAsync("GetSceneItemBlendMode", data);
+        var resp = await _bridge.SendRequestAsync("GetSceneItemBlendMode", data);
+        return resp["sceneItemBlendMode"].ToObject<string>();
     }
     /// <summary>Sets the blend mode of a scene item. Scenes and Groups - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene the item is in</param>

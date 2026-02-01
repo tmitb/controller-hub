@@ -41,8 +41,11 @@ public class TransitionsRequests : BaseRequests
         return _bridge.SendRequestAsync("SetCurrentSceneTransitionSettings", data);
     }
     /// <summary>Gets the cursor position of the current scene transition. Note: `transitionCursor` will return 1.0 when the transition is inactive. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<double> GetCurrentSceneTransitionCursorAsync()
-    => _bridge.SendRequestAsync("GetCurrentSceneTransitionCursor", new JObject());
+    public async Task<double> GetCurrentSceneTransitionCursorAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("GetCurrentSceneTransitionCursor", new JObject());
+        return resp["transitionCursor"].ToObject<double>();
+    }
     /// <summary>Triggers the current scene transition. Same functionality as the `Transition` button in studio mode. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0 ---</summary>
     public Task<JObject> TriggerStudioModeTransitionAsync()
     => _bridge.SendRequestAsync("TriggerStudioModeTransition", new JObject());

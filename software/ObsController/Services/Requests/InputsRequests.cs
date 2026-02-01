@@ -99,12 +99,13 @@ public class InputsRequests : BaseRequests
     /// <summary>Gets the audio mute state of an input. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of input to get the mute state of</param>
     /// <param name="inputUuid">UUID of input to get the mute state of</param>
-    public Task<bool> GetInputMuteAsync(string inputName = null, string inputUuid = null)
+    public async Task<bool> GetInputMuteAsync(string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
         if (inputUuid != null) data["inputUuid"] = JToken.FromObject(inputUuid);
-        return _bridge.SendRequestAsync("GetInputMute", data);
+        var resp = await _bridge.SendRequestAsync("GetInputMute", data);
+        return resp["inputMuted"].ToObject<bool>();
     }
     /// <summary>Sets the audio mute state of an input. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to set the mute state of</param>
@@ -121,12 +122,13 @@ public class InputsRequests : BaseRequests
     /// <summary>Toggles the audio mute state of an input. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to toggle the mute state of</param>
     /// <param name="inputUuid">UUID of the input to toggle the mute state of</param>
-    public Task<bool> ToggleInputMuteAsync(string inputName = null, string inputUuid = null)
+    public async Task<bool> ToggleInputMuteAsync(string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
         if (inputUuid != null) data["inputUuid"] = JToken.FromObject(inputUuid);
-        return _bridge.SendRequestAsync("ToggleInputMute", data);
+        var resp = await _bridge.SendRequestAsync("ToggleInputMute", data);
+        return resp["inputMuted"].ToObject<bool>();
     }
     /// <summary>Gets the current volume setting of an input. - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to get the volume of</param>
@@ -155,12 +157,13 @@ public class InputsRequests : BaseRequests
     /// <summary>Gets the audio balance of an input. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to get the audio balance of</param>
     /// <param name="inputUuid">UUID of the input to get the audio balance of</param>
-    public Task<double> GetInputAudioBalanceAsync(string inputName = null, string inputUuid = null)
+    public async Task<double> GetInputAudioBalanceAsync(string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
         if (inputUuid != null) data["inputUuid"] = JToken.FromObject(inputUuid);
-        return _bridge.SendRequestAsync("GetInputAudioBalance", data);
+        var resp = await _bridge.SendRequestAsync("GetInputAudioBalance", data);
+        return resp["inputAudioBalance"].ToObject<double>();
     }
     /// <summary>Sets the audio balance of an input. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to set the audio balance of</param>
@@ -177,12 +180,13 @@ public class InputsRequests : BaseRequests
     /// <summary>Gets the audio sync offset of an input. Note: The audio sync offset can be negative too! - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to get the audio sync offset of</param>
     /// <param name="inputUuid">UUID of the input to get the audio sync offset of</param>
-    public Task<double> GetInputAudioSyncOffsetAsync(string inputName = null, string inputUuid = null)
+    public async Task<double> GetInputAudioSyncOffsetAsync(string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
         if (inputUuid != null) data["inputUuid"] = JToken.FromObject(inputUuid);
-        return _bridge.SendRequestAsync("GetInputAudioSyncOffset", data);
+        var resp = await _bridge.SendRequestAsync("GetInputAudioSyncOffset", data);
+        return resp["inputAudioSyncOffset"].ToObject<double>();
     }
     /// <summary>Sets the audio sync offset of an input. - Complexity Rating: `3/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to set the audio sync offset of</param>
@@ -199,12 +203,13 @@ public class InputsRequests : BaseRequests
     /// <summary>Gets the audio monitor type of an input. The available audio monitor types are: - `OBS_MONITORING_TYPE_NONE` - `OBS_MONITORING_TYPE_MONITOR_ONLY` - `OBS_MONITORING_TYPE_MONITOR_AND_OUTPUT` - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to get the audio monitor type of</param>
     /// <param name="inputUuid">UUID of the input to get the audio monitor type of</param>
-    public Task<string> GetInputAudioMonitorTypeAsync(string inputName = null, string inputUuid = null)
+    public async Task<string> GetInputAudioMonitorTypeAsync(string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
         if (inputUuid != null) data["inputUuid"] = JToken.FromObject(inputUuid);
-        return _bridge.SendRequestAsync("GetInputAudioMonitorType", data);
+        var resp = await _bridge.SendRequestAsync("GetInputAudioMonitorType", data);
+        return resp["monitorType"].ToObject<string>();
     }
     /// <summary>Sets the audio monitor type of an input. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="inputName">Name of the input to set the audio monitor type of</param>
@@ -243,12 +248,13 @@ public class InputsRequests : BaseRequests
     /// <summary>Gets the deinterlace mode of an input. Deinterlace Modes: - `OBS_DEINTERLACE_MODE_DISABLE` - `OBS_DEINTERLACE_MODE_DISCARD` - `OBS_DEINTERLACE_MODE_RETRO` - `OBS_DEINTERLACE_MODE_BLEND` - `OBS_DEINTERLACE_MODE_BLEND_2X` - `OBS_DEINTERLACE_MODE_LINEAR` - `OBS_DEINTERLACE_MODE_LINEAR_2X` - `OBS_DEINTERLACE_MODE_YADIF` - `OBS_DEINTERLACE_MODE_YADIF_2X` Note: Deinterlacing functionality is restricted to async inputs only. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.6.0</summary>
     /// <param name="inputName">Name of the input</param>
     /// <param name="inputUuid">UUID of the input</param>
-    public Task<string> GetInputDeinterlaceModeAsync(string inputName = null, string inputUuid = null)
+    public async Task<string> GetInputDeinterlaceModeAsync(string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
         if (inputUuid != null) data["inputUuid"] = JToken.FromObject(inputUuid);
-        return _bridge.SendRequestAsync("GetInputDeinterlaceMode", data);
+        var resp = await _bridge.SendRequestAsync("GetInputDeinterlaceMode", data);
+        return resp["inputDeinterlaceMode"].ToObject<string>();
     }
     /// <summary>Sets the deinterlace mode of an input. Note: Deinterlacing functionality is restricted to async inputs only. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.6.0</summary>
     /// <param name="inputName">Name of the input</param>
@@ -265,12 +271,13 @@ public class InputsRequests : BaseRequests
     /// <summary>Gets the deinterlace field order of an input. Deinterlace Field Orders: - `OBS_DEINTERLACE_FIELD_ORDER_TOP` - `OBS_DEINTERLACE_FIELD_ORDER_BOTTOM` Note: Deinterlacing functionality is restricted to async inputs only. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.6.0</summary>
     /// <param name="inputName">Name of the input</param>
     /// <param name="inputUuid">UUID of the input</param>
-    public Task<string> GetInputDeinterlaceFieldOrderAsync(string inputName = null, string inputUuid = null)
+    public async Task<string> GetInputDeinterlaceFieldOrderAsync(string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
         if (inputUuid != null) data["inputUuid"] = JToken.FromObject(inputUuid);
-        return _bridge.SendRequestAsync("GetInputDeinterlaceFieldOrder", data);
+        var resp = await _bridge.SendRequestAsync("GetInputDeinterlaceFieldOrder", data);
+        return resp["inputDeinterlaceFieldOrder"].ToObject<string>();
     }
     /// <summary>Sets the deinterlace field order of an input. Note: Deinterlacing functionality is restricted to async inputs only. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.6.0</summary>
     /// <param name="inputName">Name of the input</param>

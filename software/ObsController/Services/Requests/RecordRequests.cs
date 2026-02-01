@@ -9,14 +9,20 @@ public class RecordRequests : BaseRequests
     public Task<JObject> GetRecordStatusAsync()
     => _bridge.SendRequestAsync("GetRecordStatus", new JObject());
     /// <summary>Toggles the status of the record output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<bool> ToggleRecordAsync()
-    => _bridge.SendRequestAsync("ToggleRecord", new JObject());
+    public async Task<bool> ToggleRecordAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("ToggleRecord", new JObject());
+        return resp["outputActive"].ToObject<bool>();
+    }
     /// <summary>Starts the record output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0 ---</summary>
     public Task<JObject> StartRecordAsync()
     => _bridge.SendRequestAsync("StartRecord", new JObject());
     /// <summary>Stops the record output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<string> StopRecordAsync()
-    => _bridge.SendRequestAsync("StopRecord", new JObject());
+    public async Task<string> StopRecordAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("StopRecord", new JObject());
+        return resp["outputPath"].ToObject<string>();
+    }
     /// <summary>Toggles pause on the record output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0 ---</summary>
     public Task<JObject> ToggleRecordPauseAsync()
     => _bridge.SendRequestAsync("ToggleRecordPause", new JObject());

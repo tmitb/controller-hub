@@ -130,8 +130,11 @@ public class ConfigRequests : BaseRequests
         return _bridge.SendRequestAsync("SetStreamServiceSettings", data);
     }
     /// <summary>Gets the current directory that the record output is set to. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<string> GetRecordDirectoryAsync()
-    => _bridge.SendRequestAsync("GetRecordDirectory", new JObject());
+    public async Task<string> GetRecordDirectoryAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("GetRecordDirectory", new JObject());
+        return resp["recordDirectory"].ToObject<string>();
+    }
     /// <summary>Sets the current directory that the record output writes files to. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.3.0</summary>
     /// <param name="recordDirectory">Output directory</param>
     public Task<JObject> SetRecordDirectoryAsync(string recordDirectory)

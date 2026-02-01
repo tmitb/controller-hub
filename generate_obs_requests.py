@@ -243,12 +243,14 @@ for cat_name, cat_body in categories:
         lines.append(f"    /// <summary>{summary_text}</summary>")
         for doc in doc_params:
             lines.append(f"    {doc}")
-        lines.append(f"    public Task<{cs_ret}> {req_name}Async({params_str})")
+        # Emit method signature, handling primitive return types.
+        if cs_ret == "JObject":
+            lines.append(f"    public Task<JObject> {req_name}Async({params_str})")
+        else:
+            lines.append(f"    public async Task<{cs_ret}> {req_name}Async({params_str})")
 
-        # -------------------------------------------------------------------
         # Build request payload. If there are parameters, construct a JObject and add
         # each non‑null argument; otherwise send an empty object.
-        # -------------------------------------------------------------------
         if param_parts:
             lines.append("    {")
             lines.append("        var data = new JObject();")
@@ -256,16 +258,28 @@ for cat_name, cat_body in categories:
                 raw_name = field["name"]
                 optional = raw_name.startswith("?")
                 name = raw_name.lstrip("?")
-                # For required primitive types (e.g., bool, double) we always include them.
                 if optional:
                     lines.append(f"        if ({name} != null) data[\"{name}\"] = JToken.FromObject({name});")
                 else:
-                    # Non‑optional arguments: directly assign (covers required primitives and objects).
                     lines.append(f"        data[\"{name}\"] = JToken.FromObject({name});")
-            lines.append(f"        return _bridge.SendRequestAsync(\"{req_name}\", data);")
+
+            # Call bridge and extract response if needed.
+            if cs_ret == "JObject":
+                lines.append(f"        return _bridge.SendRequestAsync(\"{req_name}\", data);")
+            else:
+                resp_field = response_fields[0]["name"]
+                lines.append(f"        var resp = await _bridge.SendRequestAsync(\"{req_name}\", data);")
+                lines.append(f"        return resp[\"{resp_field}\"].ToObject<{cs_ret}>();")
             lines.append("    }")
         else:
-            lines.append(f"    => _bridge.SendRequestAsync(\"{req_name}\", new JObject());")
+            if cs_ret == "JObject":
+                lines.append(f"    => _bridge.SendRequestAsync(\"{req_name}\", new JObject());")
+            else:
+                resp_field = response_fields[0]["name"] if response_fields else ""
+                lines.append("    {")
+                lines.append(f"        var resp = await _bridge.SendRequestAsync(\"{req_name}\", new JObject());")
+                lines.append(f"        return resp[\"{resp_field}\"].ToObject<{cs_ret}>();")
+                lines.append("    }")
 
     lines.append("}")
 

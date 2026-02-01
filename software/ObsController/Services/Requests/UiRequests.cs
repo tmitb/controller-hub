@@ -6,8 +6,11 @@ public class UiRequests : BaseRequests
 {
     public UiRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets whether studio is enabled. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<bool> GetStudioModeEnabledAsync()
-    => _bridge.SendRequestAsync("GetStudioModeEnabled", new JObject());
+    public async Task<bool> GetStudioModeEnabledAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("GetStudioModeEnabled", new JObject());
+        return resp["studioModeEnabled"].ToObject<bool>();
+    }
     /// <summary>Enables or disables studio mode - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="studioModeEnabled">True == Enabled, False == Disabled</param>
     public Task<JObject> SetStudioModeEnabledAsync(bool studioModeEnabled)

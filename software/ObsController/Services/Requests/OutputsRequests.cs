@@ -6,11 +6,17 @@ public class OutputsRequests : BaseRequests
 {
     public OutputsRequests(ObsBridge bridge) : base(bridge) {}
     /// <summary>Gets the status of the virtualcam output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<bool> GetVirtualCamStatusAsync()
-    => _bridge.SendRequestAsync("GetVirtualCamStatus", new JObject());
+    public async Task<bool> GetVirtualCamStatusAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("GetVirtualCamStatus", new JObject());
+        return resp["outputActive"].ToObject<bool>();
+    }
     /// <summary>Toggles the state of the virtualcam output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<bool> ToggleVirtualCamAsync()
-    => _bridge.SendRequestAsync("ToggleVirtualCam", new JObject());
+    public async Task<bool> ToggleVirtualCamAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("ToggleVirtualCam", new JObject());
+        return resp["outputActive"].ToObject<bool>();
+    }
     /// <summary>Starts the virtualcam output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0 ---</summary>
     public Task<JObject> StartVirtualCamAsync()
     => _bridge.SendRequestAsync("StartVirtualCam", new JObject());
@@ -18,11 +24,17 @@ public class OutputsRequests : BaseRequests
     public Task<JObject> StopVirtualCamAsync()
     => _bridge.SendRequestAsync("StopVirtualCam", new JObject());
     /// <summary>Gets the status of the replay buffer output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<bool> GetReplayBufferStatusAsync()
-    => _bridge.SendRequestAsync("GetReplayBufferStatus", new JObject());
+    public async Task<bool> GetReplayBufferStatusAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("GetReplayBufferStatus", new JObject());
+        return resp["outputActive"].ToObject<bool>();
+    }
     /// <summary>Toggles the state of the replay buffer output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<bool> ToggleReplayBufferAsync()
-    => _bridge.SendRequestAsync("ToggleReplayBuffer", new JObject());
+    public async Task<bool> ToggleReplayBufferAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("ToggleReplayBuffer", new JObject());
+        return resp["outputActive"].ToObject<bool>();
+    }
     /// <summary>Starts the replay buffer output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0 ---</summary>
     public Task<JObject> StartReplayBufferAsync()
     => _bridge.SendRequestAsync("StartReplayBuffer", new JObject());
@@ -33,8 +45,11 @@ public class OutputsRequests : BaseRequests
     public Task<JObject> SaveReplayBufferAsync()
     => _bridge.SendRequestAsync("SaveReplayBuffer", new JObject());
     /// <summary>Gets the filename of the last replay buffer save file. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<string> GetLastReplayBufferReplayAsync()
-    => _bridge.SendRequestAsync("GetLastReplayBufferReplay", new JObject());
+    public async Task<string> GetLastReplayBufferReplayAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("GetLastReplayBufferReplay", new JObject());
+        return resp["savedReplayPath"].ToObject<string>();
+    }
     /// <summary>Gets the list of available outputs. - Complexity Rating: `4/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     public Task<JObject> GetOutputListAsync()
     => _bridge.SendRequestAsync("GetOutputList", new JObject());
@@ -48,11 +63,12 @@ public class OutputsRequests : BaseRequests
     }
     /// <summary>Toggles the status of an output. - Complexity Rating: `4/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="outputName">Output name</param>
-    public Task<bool> ToggleOutputAsync(string outputName)
+    public async Task<bool> ToggleOutputAsync(string outputName)
     {
         var data = new JObject();
         data["outputName"] = JToken.FromObject(outputName);
-        return _bridge.SendRequestAsync("ToggleOutput", data);
+        var resp = await _bridge.SendRequestAsync("ToggleOutput", data);
+        return resp["outputActive"].ToObject<bool>();
     }
     /// <summary>Starts an output. - Complexity Rating: `4/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="outputName">Output name</param>

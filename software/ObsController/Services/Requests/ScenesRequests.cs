@@ -39,11 +39,12 @@ public class ScenesRequests : BaseRequests
     }
     /// <summary>Creates a new scene in OBS. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name for the new scene</param>
-    public Task<string> CreateSceneAsync(string sceneName)
+    public async Task<string> CreateSceneAsync(string sceneName)
     {
         var data = new JObject();
         data["sceneName"] = JToken.FromObject(sceneName);
-        return _bridge.SendRequestAsync("CreateScene", data);
+        var resp = await _bridge.SendRequestAsync("CreateScene", data);
+        return resp["sceneUuid"].ToObject<string>();
     }
     /// <summary>Removes a scene from OBS. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
     /// <param name="sceneName">Name of the scene to remove</param>

@@ -52,10 +52,10 @@ public class GeneralRequests : BaseRequests
         var data = new JObject();
         if (keyId != null) data["keyId"] = JToken.FromObject(keyId);
         if (keyModifiers != null) data["keyModifiers"] = JToken.FromObject(keyModifiers);
-        if (keyModifiers.shift != null) data["keyModifiers.shift"] = JToken.FromObject(keyModifiers.shift);
-        if (keyModifiers.control != null) data["keyModifiers.control"] = JToken.FromObject(keyModifiers.control);
-        if (keyModifiers.alt != null) data["keyModifiers.alt"] = JToken.FromObject(keyModifiers.alt);
-        if (keyModifiers.command != null) data["keyModifiers.command"] = JToken.FromObject(keyModifiers.command);
+        if (keyModifiers.GetValue("shift") != null) data["keyModifiers.shift"] = JToken.FromObject(keyModifiers.GetValue("shift"));
+        if (keyModifiers.GetValue("control") != null) data["keyModifiers.control"] = JToken.FromObject(keyModifiers.GetValue("control"));
+        if (keyModifiers.GetValue("alt") != null) data["keyModifiers.alt"] = JToken.FromObject(keyModifiers.GetValue("alt"));
+        if (keyModifiers.GetValue("command") != null) data["keyModifiers.command"] = JToken.FromObject(keyModifiers.GetValue("command"));
         return _bridge.SendRequestAsync("TriggerHotkeyByKeySequence", data);
     }
     /// <summary>Sleeps for a time duration or number of frames. Only available in request batches with types `SERIAL_REALTIME` or `SERIAL_FRAME`. - Complexity Rating: `2/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>

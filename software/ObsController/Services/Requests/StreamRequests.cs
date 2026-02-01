@@ -9,8 +9,11 @@ public class StreamRequests : BaseRequests
     public Task<JObject> GetStreamStatusAsync()
     => _bridge.SendRequestAsync("GetStreamStatus", new JObject());
     /// <summary>Toggles the status of the stream output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0</summary>
-    public Task<bool> ToggleStreamAsync()
-    => _bridge.SendRequestAsync("ToggleStream", new JObject());
+    public async Task<bool> ToggleStreamAsync()
+    {
+        var resp = await _bridge.SendRequestAsync("ToggleStream", new JObject());
+        return resp["outputActive"].ToObject<bool>();
+    }
     /// <summary>Starts the stream output. - Complexity Rating: `1/5` - Latest Supported RPC Version: `1` - Added in v5.0.0 ---</summary>
     public Task<JObject> StartStreamAsync()
     => _bridge.SendRequestAsync("StartStream", new JObject());

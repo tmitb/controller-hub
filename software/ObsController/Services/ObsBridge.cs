@@ -109,7 +109,7 @@ public class ObsBridge : IAsyncDisposable
         return JObject.Parse(sb.ToString());
     }
 
-    private async Task<JObject> SendRequestAsync(string requestType, JObject @params = null)
+    internal async Task<JObject> SendRequestAsync(string requestType, JObject @params = null)
     {
         // Generate a unique requestId and register a TCS that will be completed by the background receive loop.
         var id = Interlocked.Increment(ref _requestId).ToString();

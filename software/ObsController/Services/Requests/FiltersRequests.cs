@@ -32,7 +32,7 @@ public class FiltersRequests : BaseRequests
     /// <param name="filterName">Name of the new filter to be created</param>
     /// <param name="filterKind">The kind of filter to be created</param>
     /// <param name="filterSettings">Settings object to initialize the filter with</param>
-    public Task<JObject> CreateSourceFilterAsync(string sourceName = null, string sourceUuid = null, string filterName, string filterKind, JObject filterSettings = null)
+    public Task<JObject> CreateSourceFilterAsync(string filterName, string filterKind, string sourceName = null, string sourceUuid = null, JObject filterSettings = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
@@ -46,7 +46,7 @@ public class FiltersRequests : BaseRequests
     /// <param name="sourceName">Name of the source the filter is on</param>
     /// <param name="sourceUuid">UUID of the source the filter is on</param>
     /// <param name="filterName">Name of the filter to remove</param>
-    public Task<JObject> RemoveSourceFilterAsync(string sourceName = null, string sourceUuid = null, string filterName)
+    public Task<JObject> RemoveSourceFilterAsync(string filterName, string sourceName = null, string sourceUuid = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
@@ -59,7 +59,7 @@ public class FiltersRequests : BaseRequests
     /// <param name="sourceUuid">UUID of the source the filter is on</param>
     /// <param name="filterName">Current name of the filter</param>
     /// <param name="newFilterName">New name for the filter</param>
-    public Task<JObject> SetSourceFilterNameAsync(string sourceName = null, string sourceUuid = null, string filterName, string newFilterName)
+    public Task<JObject> SetSourceFilterNameAsync(string filterName, string newFilterName, string sourceName = null, string sourceUuid = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
@@ -72,7 +72,7 @@ public class FiltersRequests : BaseRequests
     /// <param name="sourceName">Name of the source</param>
     /// <param name="sourceUuid">UUID of the source</param>
     /// <param name="filterName">Name of the filter</param>
-    public Task<JObject> GetSourceFilterAsync(string sourceName = null, string sourceUuid = null, string filterName)
+    public Task<JObject> GetSourceFilterAsync(string filterName, string sourceName = null, string sourceUuid = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
@@ -85,7 +85,7 @@ public class FiltersRequests : BaseRequests
     /// <param name="sourceUuid">UUID of the source the filter is on</param>
     /// <param name="filterName">Name of the filter</param>
     /// <param name="filterIndex">New index position of the filter</param>
-    public Task<JObject> SetSourceFilterIndexAsync(string sourceName = null, string sourceUuid = null, string filterName, double filterIndex)
+    public Task<JObject> SetSourceFilterIndexAsync(string filterName, double filterIndex, string sourceName = null, string sourceUuid = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
@@ -100,7 +100,7 @@ public class FiltersRequests : BaseRequests
     /// <param name="filterName">Name of the filter to set the settings of</param>
     /// <param name="filterSettings">Object of settings to apply</param>
     /// <param name="overlay">True == apply the settings on top of existing ones, False == reset the input to its defaults, then apply settings.</param>
-    public Task<JObject> SetSourceFilterSettingsAsync(string sourceName = null, string sourceUuid = null, string filterName, JObject filterSettings, bool? overlay = null)
+    public Task<JObject> SetSourceFilterSettingsAsync(string filterName, JObject filterSettings, string sourceName = null, string sourceUuid = null, bool? overlay = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
@@ -115,7 +115,7 @@ public class FiltersRequests : BaseRequests
     /// <param name="sourceUuid">UUID of the source the filter is on</param>
     /// <param name="filterName">Name of the filter</param>
     /// <param name="filterEnabled">New enable state of the filter</param>
-    public Task<JObject> SetSourceFilterEnabledAsync(string sourceName = null, string sourceUuid = null, string filterName, bool filterEnabled)
+    public Task<JObject> SetSourceFilterEnabledAsync(string filterName, bool filterEnabled, string sourceName = null, string sourceUuid = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);

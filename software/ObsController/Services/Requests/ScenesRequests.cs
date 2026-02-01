@@ -59,7 +59,7 @@ public class ScenesRequests : BaseRequests
     /// <param name="sceneName">Name of the scene to be renamed</param>
     /// <param name="sceneUuid">UUID of the scene to be renamed</param>
     /// <param name="newSceneName">New name for the scene</param>
-    public Task<JObject> SetSceneNameAsync(string sceneName = null, string sceneUuid = null, string newSceneName)
+    public Task<JObject> SetSceneNameAsync(string newSceneName, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);

@@ -158,7 +158,9 @@ for cat_name, cat_body in categories:
         # -------------------------------------------------------------------
         # Build method signature and documentation based on request fields.
         # -------------------------------------------------------------------
-        param_parts: list[str] = []
+        # Separate required and optional parameters to ensure correct ordering.
+        required_parts: list[str] = []
+        optional_parts: list[str] = []
         doc_params: list[str] = []
         for field in request_fields:
             raw_name = field["name"]
@@ -178,8 +180,12 @@ for cat_name, cat_body in categories:
                 param_decl = f"{cs_typ} {name}"
             if optional:
                 param_decl += " = null"
-            param_parts.append(param_decl)
+                optional_parts.append(param_decl)
+            else:
+                required_parts.append(param_decl)
             doc_params.append(f"/// <param name=\"{name}\">{field['desc']}</param>")
+        # Concatenate required then optional parameters.
+        param_parts = required_parts + optional_parts
 
         params_str = ", ".join(param_parts) if param_parts else ""
 

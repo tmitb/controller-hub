@@ -30,7 +30,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneUuid">UUID of the scene or group to search in</param>
     /// <param name="sourceName">Name of the source to find</param>
     /// <param name="searchOffset">Number of matches to skip during search. >= 0 means first forward. -1 means last (top) item</param>
-    public Task<double> GetSceneItemIdAsync(string sceneName = null, string sceneUuid = null, string sourceName, double? searchOffset = null)
+    public Task<double> GetSceneItemIdAsync(string sourceName, string sceneName = null, string sceneUuid = null, double? searchOffset = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -43,7 +43,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<JObject> GetSceneItemSourceAsync(string sceneName = null, string sceneUuid = null, double sceneItemId)
+    public Task<JObject> GetSceneItemSourceAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -71,7 +71,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<JObject> RemoveSceneItemAsync(string sceneName = null, string sceneUuid = null, double sceneItemId)
+    public Task<JObject> RemoveSceneItemAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -85,7 +85,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="destinationSceneName">Name of the scene to create the duplicated item in</param>
     /// <param name="destinationSceneUuid">UUID of the scene to create the duplicated item in</param>
-    public Task<double> DuplicateSceneItemAsync(string sceneName = null, string sceneUuid = null, double sceneItemId, string destinationSceneName = null, string destinationSceneUuid = null)
+    public Task<double> DuplicateSceneItemAsync(double sceneItemId, string sceneName = null, string sceneUuid = null, string destinationSceneName = null, string destinationSceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -99,7 +99,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<JObject> GetSceneItemTransformAsync(string sceneName = null, string sceneUuid = null, double sceneItemId)
+    public Task<JObject> GetSceneItemTransformAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -112,7 +112,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="sceneItemTransform">Object containing scene item transform info to update</param>
-    public Task<JObject> SetSceneItemTransformAsync(string sceneName = null, string sceneUuid = null, double sceneItemId, JObject sceneItemTransform)
+    public Task<JObject> SetSceneItemTransformAsync(double sceneItemId, JObject sceneItemTransform, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -125,7 +125,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<bool> GetSceneItemEnabledAsync(string sceneName = null, string sceneUuid = null, double sceneItemId)
+    public Task<bool> GetSceneItemEnabledAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -138,7 +138,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="sceneItemEnabled">New enable state of the scene item</param>
-    public Task<JObject> SetSceneItemEnabledAsync(string sceneName = null, string sceneUuid = null, double sceneItemId, bool sceneItemEnabled)
+    public Task<JObject> SetSceneItemEnabledAsync(double sceneItemId, bool sceneItemEnabled, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -151,7 +151,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<bool> GetSceneItemLockedAsync(string sceneName = null, string sceneUuid = null, double sceneItemId)
+    public Task<bool> GetSceneItemLockedAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -164,7 +164,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="sceneItemLocked">New lock state of the scene item</param>
-    public Task<JObject> SetSceneItemLockedAsync(string sceneName = null, string sceneUuid = null, double sceneItemId, bool sceneItemLocked)
+    public Task<JObject> SetSceneItemLockedAsync(double sceneItemId, bool sceneItemLocked, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -177,7 +177,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<double> GetSceneItemIndexAsync(string sceneName = null, string sceneUuid = null, double sceneItemId)
+    public Task<double> GetSceneItemIndexAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -190,7 +190,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="sceneItemIndex">New index position of the scene item</param>
-    public Task<JObject> SetSceneItemIndexAsync(string sceneName = null, string sceneUuid = null, double sceneItemId, double sceneItemIndex)
+    public Task<JObject> SetSceneItemIndexAsync(double sceneItemId, double sceneItemIndex, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -203,7 +203,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneName">Name of the scene the item is in</param>
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
-    public Task<string> GetSceneItemBlendModeAsync(string sceneName = null, string sceneUuid = null, double sceneItemId)
+    public Task<string> GetSceneItemBlendModeAsync(double sceneItemId, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -216,7 +216,7 @@ public class SceneItemsRequests : BaseRequests
     /// <param name="sceneUuid">UUID of the scene the item is in</param>
     /// <param name="sceneItemId">Numeric ID of the scene item</param>
     /// <param name="sceneItemBlendMode">New blend mode</param>
-    public Task<JObject> SetSceneItemBlendModeAsync(string sceneName = null, string sceneUuid = null, double sceneItemId, string sceneItemBlendMode)
+    public Task<JObject> SetSceneItemBlendModeAsync(double sceneItemId, string sceneItemBlendMode, string sceneName = null, string sceneUuid = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);

@@ -19,7 +19,7 @@ public class MediaInputsRequests : BaseRequests
     /// <param name="inputName">Name of the media input</param>
     /// <param name="inputUuid">UUID of the media input</param>
     /// <param name="mediaCursor">New cursor position to set</param>
-    public Task<JObject> SetMediaInputCursorAsync(string inputName = null, string inputUuid = null, double mediaCursor)
+    public Task<JObject> SetMediaInputCursorAsync(double mediaCursor, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -31,7 +31,7 @@ public class MediaInputsRequests : BaseRequests
     /// <param name="inputName">Name of the media input</param>
     /// <param name="inputUuid">UUID of the media input</param>
     /// <param name="mediaCursorOffset">Value to offset the current cursor position by</param>
-    public Task<JObject> OffsetMediaInputCursorAsync(string inputName = null, string inputUuid = null, double mediaCursorOffset)
+    public Task<JObject> OffsetMediaInputCursorAsync(double mediaCursorOffset, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -43,7 +43,7 @@ public class MediaInputsRequests : BaseRequests
     /// <param name="inputName">Name of the media input</param>
     /// <param name="inputUuid">UUID of the media input</param>
     /// <param name="mediaAction">Identifier of the `ObsMediaInputAction` enum</param>
-    public Task<JObject> TriggerMediaInputActionAsync(string inputName = null, string inputUuid = null, string mediaAction)
+    public Task<JObject> TriggerMediaInputActionAsync(string mediaAction, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);

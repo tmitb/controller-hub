@@ -1,3 +1,5 @@
+using ObsController.Services;
+
 public abstract class BaseRequests
 {
     protected readonly ObsBridge _bridge;

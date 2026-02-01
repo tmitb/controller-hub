@@ -22,7 +22,7 @@ public class SourcesRequests : BaseRequests
     /// <param name="imageWidth">Width to scale the screenshot to</param>
     /// <param name="imageHeight">Height to scale the screenshot to</param>
     /// <param name="imageCompressionQuality">Compression quality to use. 0 for high compression, 100 for uncompressed. -1 to use "default" (whatever that means, idk)</param>
-    public Task<string> GetSourceScreenshotAsync(string sourceName = null, string sourceUuid = null, string imageFormat, double? imageWidth = null, double? imageHeight = null, double? imageCompressionQuality = null)
+    public Task<string> GetSourceScreenshotAsync(string imageFormat, string sourceName = null, string sourceUuid = null, double? imageWidth = null, double? imageHeight = null, double? imageCompressionQuality = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);
@@ -41,7 +41,7 @@ public class SourcesRequests : BaseRequests
     /// <param name="imageWidth">Width to scale the screenshot to</param>
     /// <param name="imageHeight">Height to scale the screenshot to</param>
     /// <param name="imageCompressionQuality">Compression quality to use. 0 for high compression, 100 for uncompressed. -1 to use "default" (whatever that means, idk)</param>
-    public Task<JObject> SaveSourceScreenshotAsync(string sourceName = null, string sourceUuid = null, string imageFormat, string imageFilePath, double? imageWidth = null, double? imageHeight = null, double? imageCompressionQuality = null)
+    public Task<JObject> SaveSourceScreenshotAsync(string imageFormat, string imageFilePath, string sourceName = null, string sourceUuid = null, double? imageWidth = null, double? imageHeight = null, double? imageCompressionQuality = null)
     {
         var data = new JObject();
         if (sourceName != null) data["sourceName"] = JToken.FromObject(sourceName);

@@ -31,7 +31,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputKind">The kind of input to be created</param>
     /// <param name="inputSettings">Settings object to initialize the input with</param>
     /// <param name="sceneItemEnabled">Whether to set the created scene item to enabled or disabled</param>
-    public Task<JObject> CreateInputAsync(string sceneName = null, string sceneUuid = null, string inputName, string inputKind, JObject inputSettings = null, bool? sceneItemEnabled = null)
+    public Task<JObject> CreateInputAsync(string inputName, string inputKind, string sceneName = null, string sceneUuid = null, JObject inputSettings = null, bool? sceneItemEnabled = null)
     {
         var data = new JObject();
         if (sceneName != null) data["sceneName"] = JToken.FromObject(sceneName);
@@ -56,7 +56,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Current input name</param>
     /// <param name="inputUuid">Current input UUID</param>
     /// <param name="newInputName">New name for the input</param>
-    public Task<JObject> SetInputNameAsync(string inputName = null, string inputUuid = null, string newInputName)
+    public Task<JObject> SetInputNameAsync(string newInputName, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -87,7 +87,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputUuid">UUID of the input to set the settings of</param>
     /// <param name="inputSettings">Object of settings to apply</param>
     /// <param name="overlay">True == apply the settings on top of existing ones, False == reset the input to its defaults, then apply settings.</param>
-    public Task<JObject> SetInputSettingsAsync(string inputName = null, string inputUuid = null, JObject inputSettings, bool? overlay = null)
+    public Task<JObject> SetInputSettingsAsync(JObject inputSettings, string inputName = null, string inputUuid = null, bool? overlay = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -110,7 +110,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input to set the mute state of</param>
     /// <param name="inputUuid">UUID of the input to set the mute state of</param>
     /// <param name="inputMuted">Whether to mute the input or not</param>
-    public Task<JObject> SetInputMuteAsync(string inputName = null, string inputUuid = null, bool inputMuted)
+    public Task<JObject> SetInputMuteAsync(bool inputMuted, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -166,7 +166,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input to set the audio balance of</param>
     /// <param name="inputUuid">UUID of the input to set the audio balance of</param>
     /// <param name="inputAudioBalance">New audio balance value</param>
-    public Task<JObject> SetInputAudioBalanceAsync(string inputName = null, string inputUuid = null, double inputAudioBalance)
+    public Task<JObject> SetInputAudioBalanceAsync(double inputAudioBalance, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -188,7 +188,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input to set the audio sync offset of</param>
     /// <param name="inputUuid">UUID of the input to set the audio sync offset of</param>
     /// <param name="inputAudioSyncOffset">New audio sync offset in milliseconds</param>
-    public Task<JObject> SetInputAudioSyncOffsetAsync(string inputName = null, string inputUuid = null, double inputAudioSyncOffset)
+    public Task<JObject> SetInputAudioSyncOffsetAsync(double inputAudioSyncOffset, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -210,7 +210,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input to set the audio monitor type of</param>
     /// <param name="inputUuid">UUID of the input to set the audio monitor type of</param>
     /// <param name="monitorType">Audio monitor type</param>
-    public Task<JObject> SetInputAudioMonitorTypeAsync(string inputName = null, string inputUuid = null, string monitorType)
+    public Task<JObject> SetInputAudioMonitorTypeAsync(string monitorType, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -232,7 +232,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input</param>
     /// <param name="inputUuid">UUID of the input</param>
     /// <param name="inputAudioTracks">Track settings to apply</param>
-    public Task<JObject> SetInputAudioTracksAsync(string inputName = null, string inputUuid = null, JObject inputAudioTracks)
+    public Task<JObject> SetInputAudioTracksAsync(JObject inputAudioTracks, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -254,7 +254,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input</param>
     /// <param name="inputUuid">UUID of the input</param>
     /// <param name="inputDeinterlaceMode">Deinterlace mode for the input</param>
-    public Task<JObject> SetInputDeinterlaceModeAsync(string inputName = null, string inputUuid = null, string inputDeinterlaceMode)
+    public Task<JObject> SetInputDeinterlaceModeAsync(string inputDeinterlaceMode, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -276,7 +276,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input</param>
     /// <param name="inputUuid">UUID of the input</param>
     /// <param name="inputDeinterlaceFieldOrder">Deinterlace field order for the input</param>
-    public Task<JObject> SetInputDeinterlaceFieldOrderAsync(string inputName = null, string inputUuid = null, string inputDeinterlaceFieldOrder)
+    public Task<JObject> SetInputDeinterlaceFieldOrderAsync(string inputDeinterlaceFieldOrder, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -288,7 +288,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input</param>
     /// <param name="inputUuid">UUID of the input</param>
     /// <param name="propertyName">Name of the list property to get the items of</param>
-    public Task<JObject> GetInputPropertiesListPropertyItemsAsync(string inputName = null, string inputUuid = null, string propertyName)
+    public Task<JObject> GetInputPropertiesListPropertyItemsAsync(string propertyName, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);
@@ -300,7 +300,7 @@ public class InputsRequests : BaseRequests
     /// <param name="inputName">Name of the input</param>
     /// <param name="inputUuid">UUID of the input</param>
     /// <param name="propertyName">Name of the button property to press</param>
-    public Task<JObject> PressInputPropertiesButtonAsync(string inputName = null, string inputUuid = null, string propertyName)
+    public Task<JObject> PressInputPropertiesButtonAsync(string propertyName, string inputName = null, string inputUuid = null)
     {
         var data = new JObject();
         if (inputName != null) data["inputName"] = JToken.FromObject(inputName);

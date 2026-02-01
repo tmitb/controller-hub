@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Version>0.2.0</Version>
     <!-- Target the latest LTS version of .NET -->
     <!-- Use the full TFM that includes the Windows SDK version to avoid NETSDK1135 -->
     <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>

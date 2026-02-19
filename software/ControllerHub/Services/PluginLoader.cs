@@ -12,7 +12,9 @@ namespace ControllerHub.Services;
 
 public static class PluginLoader
 {
-    public static async Task<List<IActionPlugin>> LoadAsync(Mapping mapping, CancellationToken ct)
+    // Phase 1: scan plugins/*.dll, instantiate, check for duplicate TypeNames.
+    // Does NOT call InitializeAsync.
+    public static List<IActionPlugin> Discover()
     {
         var plugins = new List<IActionPlugin>();
         var pluginsDir = Path.Combine(
@@ -84,27 +86,46 @@ public static class PluginLoader
                     }
                 }
 
-                // Look up plugin config
-                JsonElement? cfg = null;
-                if (mapping.PluginConfigs != null &&
-                    mapping.PluginConfigs.TryGetValue(instance.TypeName, out var cfgElement))
-                {
-                    cfg = cfgElement;
-                }
-
-                try
-                {
-                    await instance.InitializeAsync(cfg, new PluginLogger(instance.TypeName), ct);
-                    plugins.Add(instance);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[WARN] Plugin '{instance.TypeName}' failed to initialize: {ex.Message}");
-                    await instance.DisposeAsync();
-                }
+                plugins.Add(instance);
             }
         }
 
         return plugins;
+    }
+
+    // Phase 2: call InitializeAsync on each plugin using (possibly CLI-enriched) configs.
+    // Config lookup: enrichedConfigs[plugin.TypeName] takes priority, then mapping.PluginConfigs[plugin.TypeName].
+    // Failed plugins are removed from the list and disposed.
+    public static async Task InitializeAllAsync(
+        List<IActionPlugin> plugins,
+        Mapping mapping,
+        IReadOnlyDictionary<string, JsonElement> enrichedConfigs,
+        CancellationToken ct)
+    {
+        var toRemove = new List<IActionPlugin>();
+
+        foreach (var instance in plugins)
+        {
+            JsonElement? cfg = null;
+            if (enrichedConfigs.TryGetValue(instance.TypeName, out var enriched))
+                cfg = enriched;
+            else if (mapping.PluginConfigs != null &&
+                     mapping.PluginConfigs.TryGetValue(instance.TypeName, out var cfgElement))
+                cfg = cfgElement;
+
+            try
+            {
+                await instance.InitializeAsync(cfg, new PluginLogger(instance.TypeName), ct);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WARN] Plugin '{instance.TypeName}' failed to initialize: {ex.Message}");
+                await instance.DisposeAsync();
+                toRemove.Add(instance);
+            }
+        }
+
+        foreach (var failed in toRemove)
+            plugins.Remove(failed);
     }
 }

@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,47 +16,98 @@ namespace ControllerHub;
 
 public class Program
 {
+    private sealed class BoundCliOption
+    {
+        public string PluginTypeName { get; }
+        public string JsonKey { get; }
+        public Option Option { get; }
+        public Func<ParseResult, object?> GetValue { get; }
+
+        private BoundCliOption(string pluginTypeName, string jsonKey, Option option, Func<ParseResult, object?> getValue)
+        {
+            PluginTypeName = pluginTypeName;
+            JsonKey = jsonKey;
+            Option = option;
+            GetValue = getValue;
+        }
+
+        public static BoundCliOption From(PluginCliOption pco, string typeName)
+        {
+            // Build Option<T> via reflection (T = pco.ValueType)
+            var optType = typeof(Option<>).MakeGenericType(pco.ValueType);
+            var option = (Option)optType.GetConstructor([typeof(string), typeof(string)])!
+                                        .Invoke([pco.Name, pco.Description]);
+            if (pco.IsRequired) option.IsRequired = true;
+
+            // Build Func<ParseResult, object?> that calls GetValueForOption<T>
+            var getValueForOption = typeof(ParseResult)
+                .GetMethod(nameof(ParseResult.GetValueForOption))!
+                .MakeGenericMethod(pco.ValueType);
+            Func<ParseResult, object?> getValue = pr => getValueForOption.Invoke(pr, [option]);
+
+            // Derive JSON key: strip "--{typeName}-" prefix, e.g. "--obs-host" -> "host"
+            var prefix = $"--{typeName}-";
+            var jsonKey = pco.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                ? pco.Name[prefix.Length..]
+                : pco.Name.TrimStart('-');
+
+            return new BoundCliOption(typeName, jsonKey, option, getValue);
+        }
+    }
+
+    private static JsonElement MergeIntoConfig(
+        JsonElement? existing,
+        IEnumerable<(string key, object? value)> overrides)
+    {
+        var dict = existing?.ValueKind == JsonValueKind.Object
+            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(existing.Value.GetRawText())!
+            : new Dictionary<string, JsonElement>();
+
+        foreach (var (key, value) in overrides)
+            if (value is not null)
+                dict[key] = JsonSerializer.SerializeToElement(value);
+
+        return JsonSerializer.SerializeToElement(dict);
+    }
+
     public static async Task<int> Main(string[] args)
     {
-        // Define CLI options (all optional – they override mapping.json values)
-        var hostOption = new Option<string>("--host", description: "OBS websocket host (default from mapping.json)");
-        var portOption = new Option<int?>("--port", description: "OBS websocket port (default from mapping.json)");
-        var passwordOption = new Option<string>("--password", description: "OBS websocket password (overrides mapping.json)");
+        // Phase 1: Discover plugins (instantiate without initialising)
+        var plugins = PluginLoader.Discover();
 
-        var rootCommand = new RootCommand("BLE‑OBS controller – reads a configurable gamepad and triggers OBS actions.")
-        {
-            hostOption,
-            portOption,
-            passwordOption
-        };
+        // Collect CLI options from all discovered plugins
+        var bound = plugins
+            .SelectMany(p => p.GetCliOptions().Select(pco => BoundCliOption.From(pco, p.TypeName)))
+            .ToList();
 
-        rootCommand.SetHandler(async (host, port, password) =>
+        var rootCommand = new RootCommand("BLE\u2011OBS controller \u2013 reads a configurable gamepad and triggers OBS actions.");
+        foreach (var b in bound)
+            rootCommand.AddOption(b.Option);
+
+        rootCommand.SetHandler(async (InvocationContext ctx) =>
         {
             // Load configuration from mapping.json
             Mapping mapping = ConfigLoader.Load();
 
-            // Apply CLI overrides into the "obs" plugin config block
-            if (host != null || port.HasValue || password != null)
+            // Build enriched configs from CLI overrides
+            var enriched = new Dictionary<string, JsonElement>(StringComparer.OrdinalIgnoreCase);
+            foreach (var typeName in bound.Select(b => b.PluginTypeName).Distinct(StringComparer.OrdinalIgnoreCase))
             {
-                mapping.PluginConfigs ??= new Dictionary<string, JsonElement>();
-
-                string obsHost = "localhost";
-                int obsPort = 4455;
-                string obsPwd = "";
-
-                if (mapping.PluginConfigs.TryGetValue("obs", out var existing))
+                var overrides = new List<(string key, object? value)>();
+                foreach (var b in bound.Where(b => string.Equals(b.PluginTypeName, typeName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    if (existing.TryGetProperty("host", out var h)) obsHost = h.GetString()!;
-                    if (existing.TryGetProperty("port", out var p)) obsPort = p.GetInt32();
-                    if (existing.TryGetProperty("password", out var pw)) obsPwd = pw.GetString()!;
+                    var value = b.GetValue(ctx.ParseResult);
+                    if (value is not null)
+                        overrides.Add((b.JsonKey, value));
                 }
 
-                if (host != null) obsHost = host;
-                if (port.HasValue) obsPort = port.Value;
-                if (password != null) obsPwd = password;
-
-                mapping.PluginConfigs["obs"] = JsonSerializer.SerializeToElement(
-                    new { host = obsHost, port = obsPort, password = obsPwd });
+                if (overrides.Count > 0)
+                {
+                    JsonElement? existingCfg = null;
+                    if (mapping.PluginConfigs != null && mapping.PluginConfigs.TryGetValue(typeName, out var ec))
+                        existingCfg = ec;
+                    enriched[typeName] = MergeIntoConfig(existingCfg, overrides);
+                }
             }
 
             using var cts = new CancellationTokenSource();
@@ -62,40 +117,38 @@ public class Program
                 cts.Cancel();
             };
 
-            // Load plugins
-            var plugins = await PluginLoader.LoadAsync(mapping, cts.Token);
+            // Phase 2: Initialise plugins with merged config
+            await PluginLoader.InitializeAllAsync(plugins, mapping, enriched, cts.Token);
+
             var pluginMap = new Dictionary<string, IActionPlugin>(StringComparer.OrdinalIgnoreCase);
             foreach (var p in plugins)
                 pluginMap[p.TypeName] = p;
 
             // Initialise controller provider using the RawGameController API (covers BLE devices)
             IGamepadProvider gp = RawGamepadProvider.TryCreate(mapping.DeviceIdentifier);
-            ListAvailableGamepads(); // show what the OS sees so the user can adjust mapping.json
+            ListAvailableGamepads();
 
             if (gp == null)
             {
-                Console.WriteLine("[WARN] No Windows.Gaming.Input gamepad detected – controller will be idle.");
-                gp = new NullGamepadProvider(); // do‑nothing fallback to keep the app alive
+                Console.WriteLine("[WARN] No Windows.Gaming.Input gamepad detected \u2013 controller will be idle.");
+                gp = new NullGamepadProvider();
             }
 
             gp.StateChanged += states => HandleStateChanges(states, mapping, pluginMap);
             gp.Start();
-            Console.WriteLine($"Listening on gamepad device {mapping.DeviceIdentifier}… Press Ctrl+C to exit.");
+            Console.WriteLine($"Listening on gamepad device {mapping.DeviceIdentifier}\u2026 Press Ctrl+C to exit.");
 
-            // Wait until cancellation
             try
             {
                 await Task.Delay(Timeout.Infinite, cts.Token);
             }
             catch (OperationCanceledException) { /* normal shutdown */ }
 
-            // Shutdown
             gp.Stop();
             gp.Dispose();
             for (int i = plugins.Count - 1; i >= 0; i--)
                 await plugins[i].DisposeAsync();
-
-        }, hostOption, portOption, passwordOption);
+        });
 
         return await rootCommand.InvokeAsync(args);
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,13 @@ namespace ControllerHub.Obs;
 public sealed class ObsPlugin : IActionPlugin
 {
     public string TypeName => "obs";
+
+    public IReadOnlyList<PluginCliOption> GetCliOptions() =>
+    [
+        new("--obs-host",     "OBS WebSocket host (overrides mapping.json)",     typeof(string)),
+        new("--obs-port",     "OBS WebSocket port (overrides mapping.json)",     typeof(int?)),
+        new("--obs-password", "OBS WebSocket password (overrides mapping.json)", typeof(string)),
+    ];
     private ObsBridge? _bridge;
     private IPluginLogger? _logger;
     private bool _available;

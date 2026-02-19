@@ -1,0 +1,16 @@
+{
+  "deviceIdentifier": "{wgi/nrid/5]ATln1>-kPKN6=4H-@HiU-`ABmQoR-hSEb-l}",
+  "obs": {
+    "host": "localhost",
+    "port": 4455,
+    "password": ""
+  },
+  "buttonMap": {
+    "0": { "type": "obs", "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Intro" } },
+    "1": { "type": "obs", "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Main" } },
+    "2": { "type": "obs", "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Outro" } },
+    "3": { "type": "obs", "category": "Scenes", "action": "SetCurrentProgramScene", "parameters": { "sceneName": "Intermission" } },
+    "5": { "type": "obs", "category": "Stream", "action": "StartStream" },
+    "9": { "type": "obs", "category": "Stream", "action": "StopStream" }
+  }
+}

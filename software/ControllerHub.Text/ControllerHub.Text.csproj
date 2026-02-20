@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ControllerHub.Text</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ControllerHub.PluginContract\ControllerHub.PluginContract.csproj">
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Target Name="CopyToHostPlugins" AfterTargets="Build">
+    <PropertyGroup>
+      <HostPluginsDir>$(SolutionDir)ControllerHub\bin\$(Configuration)\net8.0-windows10.0.22621.0\plugins\</HostPluginsDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(HostPluginsDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(HostPluginsDir)" />
+  </Target>
+</Project>

@@ -1,6 +1,6 @@
-# OSB Controller
+# Controller Hub
 
-This branch contains a project that includes both hardware and software stacks for a gamepad based on the ESP32‑C3. The project was started out of a personal need for a button pad to control OBS while playing games.
+This branch contains a project that includes both hardware and software stacks for a gamepad based on the ESP32‑C3. The project was started out of a personal need for a button pad to control OBS while playing games, and has since grown into a configurable action invoker that maps gamepad button presses to backend actions through a JSON configuration file.
 
 The information and experience gathered from this project will be used for the following potential projects:
 - Racing sim wheel
@@ -79,26 +79,28 @@ In the test dialog, the second tab displays the status of each control. Press th
 
 ## Software
 There are several goals, requirements, and highlights for this section:
-- Controlling OBS using a gamepad
+- A configurable action invoker: gamepad button presses are mapped to backend actions through a JSON configuration file (`mapping.json`)
+- OBS Studio is the currently implemented action backend, controlled over its WebSocket v5 API (start/stop streaming, toggle recording, scene switching)
+- The gamepad input layer is abstracted behind an `IGamepadProvider` interface, making it straightforward to add alternative input sources without changing the action dispatch logic
 - The software will be built mostly using AI code agents (Vibe Coding)
   - Most of the code was built by AI using gpt-oss-120b local model.
   - It took about 12 hours of total time to build it. Of 12 hours, about 4 hours of work was done by me for both manual coding and interactions with AI.
-  - about 4 hours was spent on the python prototype which failed miserably due to insufficient supporst for the gamepads that are not XInput compatible.
- 
-At this point, the software is functional to meet my own requeirments. You can see the details of the software in [software/README.md](./software/README.md) file.
+  - about 4 hours was spent on the python prototype which failed miserably due to insufficient support for the gamepads that are not XInput compatible.
+
+At this point, the software is functional to meet my own requirements. You can see the details of the software in [software/README.md](./software/README.md) file.
 
 ### Tech notes
 The current software section has the code using C# and .Net 8. This was my first choice for this project when it was started, but AI guided me to python prototype initially. As mentioned above, that experiment failed for the said reason, and eventually I decided to come back to this.
 
-I have done some testing using another game controller that is not my own to understand how it must be coded. I was successful at changing the OBS scene using a button press. One thing I have noticed that the Windows SDK exposes anything it does not know(put it differently, something that is not XInput compatible) as `RawGameController`.
+I have done some testing using another game controller that is not my own to understand how it must be coded. I was successful at changing the OBS scene using a button press. One thing I have noticed that the Windows SDK exposes anything it does not know (put it differently, something that is not XInput compatible) as `RawGameController`.
 
-Another thing that I spent a lot of time on was the bug that was caused by how `RawGameController.RawGameControllers` behaves. It is actually well documented but AI does not know how it supposed to work and caused a massive headache for me. This Read-only collection is asynchronously updated by the Windows itself meaning that accessing it for the first time usually does not have information ready. I ended up create a loop to check it every 1 second for up to ten seconds to wait for it to be populated. A crude solution because there are other smarter way to do it, but I am happy with what I have because it works for me.
+Another thing that I spent a lot of time on was the bug that was caused by how `RawGameController.RawGameControllers` behaves. It is actually well documented but AI does not know how it is supposed to work and caused a massive headache for me. This read-only collection is asynchronously updated by Windows itself meaning that accessing it for the first time usually does not have information ready. I ended up creating a loop to check it every 1 second for up to ten seconds to wait for it to be populated. A crude solution because there are other smarter ways to do it, but I am happy with what I have because it works for me.
 
 ### TO-DOs
-I want to add some unit tests and integration tests, though I do not want to deal with mocking OBS and Physical gamepad for the automated tests. I may or may not get to them.
+I want to add some unit tests and integration tests, though I do not want to deal with mocking OBS and a physical gamepad for the automated tests. I may or may not get to them.
 
 ## License
-Please check the [LICENSE](./LICNESE) file for more details. Also check [THIRD_PARTY_NOTICES](./THIRD_PARTY_NOTICES) for the license related information regarding libraries that are used.
+Please check the [LICENSE](./LICENSE) file for more details. Also check [THIRD_PARTY_NOTICES](./THIRD_PARTY_NOTICES) for the license related information regarding libraries that are used.
 
 ## Contributions
 All contributions are welcome. Just follow the general coding style you can find in this project, then create a Pull Request. I will review them and decide what to do. If you do not want to waste time making changes then getting rejected, create an issue first to discuss potential the changes with me before commiting your time.
